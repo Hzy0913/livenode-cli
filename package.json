@@ -1,0 +1,22 @@
+{
+  "name": "livenode-cli",
+  "version": "1.0.0",
+  "description": "node web service cli 基于node的web服务搭建脚手架",
+  "bin": {
+    "livenode": "bin/livenode"
+  },
+  "keywords": [
+    "node",
+    "cli"
+  ],
+  "author": "hzy",
+  "license": "MIT",
+  "homepage": "",
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "commander": "^2.9.0",
+    "download-git-repo": "^1.0.0",
+    "inquirer": "^3.0.6",
+    "ora": "^1.2.0"
+  }
+}
