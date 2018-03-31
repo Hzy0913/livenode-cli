@@ -10,7 +10,6 @@ program
 program
   .usage('<command>')
 
-
 program
   .command('init')
   .description('Generate a new project')
