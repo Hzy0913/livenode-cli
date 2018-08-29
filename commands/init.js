@@ -2,6 +2,7 @@ const {prompt} = require('inquirer')
 const chalk = require('chalk')
 const download = require('download-git-repo')
 const ora = require('ora')
+const fs = require('fs')
 
 let tplList = require(`${__dirname}/../templates`)
 const question = [
@@ -36,7 +37,34 @@ module.exports = prompt(question).then(({name, template}) => {
       console.log(chalk.red(err))
       process.exit()
     }
-    spinner.stop()
-    console.log(chalk.green('project init successfully!'))
+    fs.readFile(`./${projectName}/package.json`, 'utf8', function (err, data) {
+      if(err) {
+        spinner.stop();
+        console.error(err);
+        return;
+      }
+      const packageJson = JSON.parse(data);
+      packageJson.scripts.start = `pm2 start build/dev-server.js --name='${projectName}'`;
+      packageJson.scripts.build = `pm2 start build/build.js -i max --watch --name='${projectName}`;
+      packageJson.scripts.restart = `pm2 restart ${projectName}`;
+      packageJson.scripts.stop = `pm2 stop ${projectName}`;
+      var updatePackageJson = JSON.stringify(packageJson, null, 2);
+      fs.writeFile(`./${projectName}/package.json`, updatePackageJson, 'utf8', function (err) {
+        if(err) {
+          spinner.stop();
+          console.error(err);
+          return;
+        } else {
+          spinner.stop();
+          console.log(chalk.green('project init successfully!'))
+          console.log(`
+            ${chalk.bgWhite.black('   Run Application  ')}
+            ${chalk.yellow(`cd ${projectName}`)}
+            ${chalk.yellow('npm install')}
+            ${chalk.yellow('npm start')}
+          `);
+        }
+      });
+    });
   })
 })
